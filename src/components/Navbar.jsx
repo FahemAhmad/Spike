@@ -6,6 +6,7 @@ import { Button, Menu, MenuItem } from "@mui/material";
 import { Link } from "react-router-dom";
 
 function Navbar({ logged }) {
+  console.log("logged", logged);
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
@@ -46,7 +47,7 @@ function Navbar({ logged }) {
                 aria-expanded={open ? "true" : undefined}
                 onClick={handleClick}
               >
-                <img src={ProfilePic} alt="ProfilePicture" />
+                <img src={logged?.picture} alt="ProfilePicture" />
               </Button>
               <Menu
                 id="basic-menu"
@@ -60,7 +61,9 @@ function Navbar({ logged }) {
                 <MenuItem onClick={handleLogout}>Logout</MenuItem>
               </Menu>
             </div>
-            <h4>Lorem Ipsum</h4>
+            <h4>
+              {logged.firstName} {logged.lastName}
+            </h4>
           </div>
         </>
       ) : (

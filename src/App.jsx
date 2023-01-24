@@ -17,7 +17,6 @@ import TasksPage from "./Pages/TasksPage";
 import NotesPage from "./Pages/NotesPage";
 import useLocalStorage from "./Hooks/useLocalStorage";
 import Signup from "./Pages/Signup";
-import Loader from "./components/Loader";
 
 const App = () => {
   // eslint-disable-next-line no-unused-vars
@@ -25,7 +24,7 @@ const App = () => {
 
   const isLoggedIn = () => {
     if (user) {
-      return true;
+      return user;
     }
     return false;
   };
