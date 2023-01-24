@@ -16,6 +16,8 @@ import EventsPage from "./Pages/EventsPage";
 import TasksPage from "./Pages/TasksPage";
 import NotesPage from "./Pages/NotesPage";
 import useLocalStorage from "./Hooks/useLocalStorage";
+import Signup from "./Pages/Signup";
+import Loader from "./components/Loader";
 
 const App = () => {
   // eslint-disable-next-line no-unused-vars
@@ -37,6 +39,7 @@ const App = () => {
           path="/"
           element={user?.email ? <Navigate to="/profile" /> : <Login />}
         />
+        <Route path="/signup" element={<Signup />} />
         <Route path="ui" element={<Card />} />
         <Route path="profile" element={<Profile />}>
           <Route path="" element={<CurrentChatPage />} />
