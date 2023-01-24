@@ -1,0 +1,47 @@
+@use "../Utilis/variables.scss" as v;
+
+.login-container {
+  min-height: calc(100vh - 100px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+
+  .login-card {
+    margin-top: -5%;
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+    justify-content: center;
+    background-color: white;
+    padding: 30px 40px;
+    align-items: center;
+    border-radius: 10px;
+    min-width: 450px;
+  }
+
+  h1 {
+    color: v.$primary;
+    font-size: 2.5rem;
+  }
+
+  h2 {
+    font-size: 1.8rem;
+  }
+  input {
+    margin-top: 30px;
+    width: 100%;
+    padding: 10px;
+    background-color: v.$lightGray;
+    border: 1px solid v.$darkGray70;
+    border-radius: 5px;
+  }
+
+  button {
+    width: 100%;
+    border: none;
+    padding: 13px;
+    background-color: v.$blue;
+    color: v.$white;
+  }
+}

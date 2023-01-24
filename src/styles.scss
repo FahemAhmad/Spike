@@ -1,9 +1,4 @@
-$primary: #7d80ff;
-$background: #eeeeef;
-$lightPurple: #dedef1;
-$lightGray: #ededed;
-$darkGray: #6f6f6e;
-$white: white;
+@use "./Utilis/variables.scss" as v;
 
 * {
   padding: 0;
@@ -13,14 +8,14 @@ $white: white;
 }
 
 body {
-  background-color: $background;
+  background-color: v.$lightPurple;
 }
 
 // Navbar styles
 
 .navbar {
   color: white;
-  background-color: $primary;
+  background-color: v.$primary;
   height: 85px;
   display: flex;
   align-items: center;
@@ -57,7 +52,6 @@ body {
     }
     h4 {
       font-weight: normal;
-      
     }
   }
 }
@@ -65,11 +59,12 @@ body {
 .chat {
   // Chat page styles
   padding: 20px;
+  background: v.$background;
 
   &-section {
     height: 100%;
     width: 100%;
-    border: 1px solid $lightGray;
+    border: 1px solid v.$lightGray;
     display: flex;
     background-color: white;
   }
@@ -95,12 +90,12 @@ body {
         margin: auto 0;
 
         &-icon {
-          color: $darkGray;
+          color: v.$darkGray;
           position: absolute;
         }
         &-field {
           width: 100%;
-          background-color: $lightGray;
+          background-color: v.$lightGray;
           border: none;
           height: 40px;
         }
@@ -145,7 +140,7 @@ body {
   align-items: center;
   gap: 20px;
   padding: 10px;
-  border-top: 1px solid $lightGray;
+  border-top: 1px solid v.$lightGray;
 
   &-image {
     width: 40px;
@@ -159,7 +154,7 @@ body {
   }
 
   &-message-badge {
-    background-color: $primary;
+    background-color: v.$primary;
     color: white;
     height: 22px;
     width: 22px;
@@ -172,6 +167,36 @@ body {
 }
 
 .icon {
-  color: $darkGray;
+  color: v.$darkGray;
   font-size: 1.25rem;
+}
+
+.button {
+  padding: 12px 25px;
+  font-size: 1rem;
+  margin-left: 20px;
+  border: none;
+  text-transform: uppercase;
+  cursor: pointer;
+  border-radius: 3px;
+}
+
+.primary-btn {
+  @extend .button;
+  background-color: v.$lightPurple;
+  color: black;
+}
+
+.secondary-btn {
+  @extend .button;
+  background-color: v.$blue;
+  color: white;
+}
+
+.primary-text {
+  color: v.$primary;
+}
+a:-webkit-any-link {
+  text-decoration: none;
+  color: inherit;
 }
