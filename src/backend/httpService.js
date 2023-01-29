@@ -1,6 +1,7 @@
 import axios from "axios";
+import * as Toastify from "../components/Toastify.jsx";
 
-const authToken = localStorage.getItem("token");
+const authToken = JSON.parse(localStorage.getItem("token"));
 
 axios.defaults.baseURL = "http://localhost:3000/api/v1";
 axios.defaults.headers.common["Authorization"] = `Bearer ${authToken}`;
@@ -16,7 +17,9 @@ axios.interceptors.response.use(null, (error) => {
 
   if (!expectedError) {
     console.log("Logging error", error);
-    alert("An unexpected Error occurred");
+    Toastify.showFailure(
+      "An unexpected error occured. Please try again later."
+    );
   }
 
   return Promise.reject(error);

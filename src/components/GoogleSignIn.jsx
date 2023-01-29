@@ -1,13 +1,12 @@
 import useFetch from "../Hooks/useFetch";
 import { signInEndpoint } from "../backend/apiCalls";
 import { useEffect } from "react";
-import Loader from "./Loader";
 
 const client_id =
   "926975398170-p7g488cjlgtv4jptqilr5b5fiajd0lda.apps.googleusercontent.com";
 
 const GoogleSignIn = () => {
-  const { handleGoogle, loading, error } = useFetch(signInEndpoint);
+  const { handleGoogle, loading } = useFetch(signInEndpoint);
 
   useEffect(() => {
     /* global google */

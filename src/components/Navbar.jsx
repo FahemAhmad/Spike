@@ -1,12 +1,10 @@
 import React from "react";
-import ProfilePic from "../assets/profile.png";
 
 import { IoMdNotifications } from "react-icons/io";
 import { Button, Menu, MenuItem } from "@mui/material";
 import { Link } from "react-router-dom";
 
 function Navbar({ logged }) {
-  console.log("logged", logged);
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
@@ -18,7 +16,8 @@ function Navbar({ logged }) {
   };
   const handleLogout = () => {
     localStorage.removeItem("user");
-    window.location.reload();
+    localStorage.removeItem("token");
+    window.location = "/";
   };
 
   return (
@@ -58,12 +57,12 @@ function Navbar({ logged }) {
                   "aria-labelledby": "basic-button",
                 }}
               >
-                <MenuItem onClick={handleLogout}>Logout</MenuItem>
+                <Link to="/">
+                  <MenuItem onClick={handleLogout}>Logout</MenuItem>
+                </Link>
               </Menu>
             </div>
-            <h4>
-              {logged.firstName} {logged.lastName}
-            </h4>
+            <h4>{logged.name}</h4>
           </div>
         </>
       ) : (

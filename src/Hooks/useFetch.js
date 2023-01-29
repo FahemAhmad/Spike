@@ -2,7 +2,6 @@ import { useState } from "react";
 import useLocalStorage from "./useLocalStorage";
 
 const useFetch = (apiCall) => {
-  console.log("chceking");
   const [loading, setLoading] = useState(false);
   const [_, setUserData] = useLocalStorage("user");
   const [error, setError] = useState("");
@@ -27,7 +26,6 @@ const useFetch = (apiCall) => {
         throw new Error(data?.message || data);
       })
       .catch((error) => {
-        console.log("error", error?.message);
         setLoading(false);
         setError(error?.message);
       });

@@ -77,44 +77,14 @@ body {
     justify-content: center;
     flex-direction: column;
     gap: 20px;
+    width: 100%;
 
     .header {
       display: flex;
       align-items: center;
       width: 100%;
       z-index: 999;
-
-      .search {
-        width: 100%;
-        margin-bottom: 10px;
-        margin: auto 0;
-
-        &-icon {
-          color: v.$darkGray;
-          position: absolute;
-        }
-        &-field {
-          width: 100%;
-          background-color: v.$lightGray;
-          border: none;
-          height: 40px;
-        }
-      }
-
-      .search-icon {
-        padding: 13px;
-        min-width: 40px;
-      }
-
-      .search-field {
-        width: 100%;
-        padding: 10px;
-        padding-left: 40px;
-        text-align: start;
-        border-radius: 5px;
-      }
     }
-
     .inbox-tabs {
       width: 100%;
     }
@@ -123,6 +93,37 @@ body {
   .user-current-chat {
     flex: 6;
   }
+}
+
+.search {
+  width: 100%;
+  margin-bottom: 10px;
+  margin: auto 0;
+
+  &-icon {
+    color: v.$darkGray;
+    position: absolute;
+  }
+  &-field {
+    width: 100%;
+    background-color: v.$lightGray;
+    border: none;
+    height: 40px;
+  }
+}
+
+.search-icon {
+  margin-top: 22px;
+  margin-left: 16px;
+  min-width: 40px;
+}
+
+.search-field {
+  width: 100%;
+  padding: 10px;
+  padding-left: 40px;
+  text-align: start;
+  border-radius: 5px;
 }
 
 .list-of-chats {
@@ -141,6 +142,10 @@ body {
   gap: 20px;
   padding: 10px;
   border-top: 1px solid v.$lightGray;
+  cursor: pointer;
+  &:hover {
+    background-color: v.$lightPurple;
+  }
 
   &-image {
     width: 40px;
@@ -199,4 +204,39 @@ body {
 a:-webkit-any-link {
   text-decoration: none;
   color: inherit;
+}
+
+input {
+  margin: 10px 0px;
+  width: 100%;
+  padding: 15px;
+  background-color: v.$lightGray;
+  border: none;
+  border-radius: 5px;
+}
+
+.search-results {
+  background: v.$white;
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  list-style: none;
+  width: 90%;
+  gap: 15px;
+  padding: 0px 10px;
+
+  li {
+    padding: 5px;
+    border-bottom: 1px solid v.$lightGray;
+    color: v.$darkGray;
+  }
+}
+
+.not-found {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: v.$darkGray;
+  height: 100%;
+  font-size: 1.5rem;
 }

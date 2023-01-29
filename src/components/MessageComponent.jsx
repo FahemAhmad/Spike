@@ -1,7 +1,14 @@
 import "./MessageComponent.scss";
 import ProfilePic from "../assets/profile.png";
+import { format } from "timeago.js";
 
-function MessageComponent({ own = false }) {
+function MessageComponent({
+  message,
+  sendDate,
+  own = false,
+  messageType,
+  attachment = null,
+}) {
   return (
     <div className={own ? "message own" : "message"}>
       <div
@@ -9,17 +16,22 @@ function MessageComponent({ own = false }) {
         style={own ? { flexDirection: "row-reverse" } : {}}
       >
         <img src={ProfilePic} alt="" className="messageImg" />
-        <p className="messageText">
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatem
-          voluptatibus magnam nulla, doloremque inventore provident molestias
-          adipisci quidem soluta? Vitae?
-        </p>
+        {messageType === "text" ? (
+          <p className="messageText">{message}</p>
+        ) : (
+          <img
+            src={attachment}
+            width={250}
+            alt={sendDate}
+            style={{ borderRadius: 10 }}
+          />
+        )}
       </div>
       <div
         className="messageBottom"
         style={own ? { textAlign: "end" } : { textAlign: "start" }}
       >
-        2 Days ago
+        {format(sendDate)}
       </div>
     </div>
   );

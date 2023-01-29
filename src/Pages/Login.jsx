@@ -1,4 +1,5 @@
 import GoogleSignIn from "../components/GoogleSignIn";
+import LoginComponent from "../components/LoginComponent";
 import "./Login.scss";
 
 function Login() {
@@ -7,8 +8,7 @@ function Login() {
       <div className="login-card">
         <h1>Spike</h1>
         <h2>Welcome to Spike!</h2>
-        <input type={"text"} placeholder="Your email" />
-        <button>Continue</button>
+        <LoginComponent />
         or
         <GoogleSignIn />
       </div>
