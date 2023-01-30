@@ -29,11 +29,19 @@ function Navbar({ logged }) {
         <>
           <div className="features">
             <ul>
-              <li>Chats</li>
-              <li>Notes</li>
+              <li>
+                <Link to="/profile/">Chats</Link>
+              </li>
+              <li>
+                <Link to="/profile/notes">Notes</Link>
+              </li>
 
-              <li>Tasks</li>
-              <li>Events</li>
+              <li>
+                <Link to="/profile/tasks">Tasks</Link>
+              </li>
+              <li>
+                <Link to="/profile/events">Events</Link>
+              </li>
             </ul>
           </div>
           <div className="profile">

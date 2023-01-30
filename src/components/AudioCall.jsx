@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import Peer from "simple-peer";
 import styled from "styled-components";
 import { IoMdCall } from "react-icons/io";
-import { useEffect } from "react";
 import { useRef } from "react";
 
 const Video = styled.video`
@@ -24,7 +23,7 @@ const AudioCall = ({
   const userVideo = useRef();
   const partnerVideo = useRef();
 
-  useEffect(() => {
+  const StartCall = () => {
     navigator.mediaDevices
       .getUserMedia({ video: true, audio: true })
       .then((stream) => {
@@ -33,9 +32,10 @@ const AudioCall = ({
           userVideo.current.srcObject = stream;
         }
       });
-  }, []);
+  };
 
   function callPeer() {
+    StartCall();
     const peer = new Peer({
       initiator: true,
       trickle: false,

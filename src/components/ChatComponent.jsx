@@ -23,7 +23,9 @@ function ChatComponent({ value, messageCount }) {
       />
       <h5 className="chat-user-name">{value.name}</h5>
       <div style={{ flex: 1 }} />
-      <div className="chat-user-message-badge">{messageCount}</div>
+      {messageCount != 0 && (
+        <div className="chat-user-message-badge">{messageCount}</div>
+      )}
     </div>
   );
 }

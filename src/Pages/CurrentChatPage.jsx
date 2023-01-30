@@ -1,32 +1,22 @@
 import "./CurrentChat.scss";
-import { BsFillCameraVideoFill } from "react-icons/bs";
 
 import { GrAttachment } from "react-icons/gr";
 import MessageComponent from "../components/MessageComponent";
 import { useContext, useEffect, useRef, useState } from "react";
+
 import { ChatContext } from "../Context/ChatContext";
 import {
   getCompleteChatEndpoint,
   sendOneToOneMessageEndpoint,
 } from "../backend/apiCalls";
 import * as Toastify from "../components/Toastify";
-import AudioCall from "../components/AudioCall";
-import useLocalStorage from "../Hooks/useLocalStorage";
 
-function CurrentChatPage({
-  socket,
-  newMessage,
-  receivingCall,
-  callAccepted,
-  setCallAccepted,
-  callerSignal,
-}) {
+function CurrentChatPage({ socket, newMessage }) {
   const messagesEndRef = useRef(null);
   const [newMessageText, setNewMessageText] = useState("");
   const { currentChat } = useContext(ChatContext);
   const [file, setFile] = useState();
   const [messages, setMessages] = useState([]);
-  const [user, _] = useLocalStorage("user");
 
   const handleKeyDown = (event) => {
     if (event.keyCode === 13) {
@@ -96,25 +86,6 @@ function CurrentChatPage({
     <>
       {currentChat ? (
         <>
-          <div className="current-chat-header">
-            <img
-              src={currentChat?.profilePicture}
-              className="icon"
-              alt="ProfileImage"
-            />
-            <h3>{currentChat.name}</h3>
-            <div style={{ flex: 1 }} />
-            <AudioCall
-              id={currentChat._id}
-              socket={socket}
-              userId={user?.id}
-              receivingCall={receivingCall}
-              callAccepted={callAccepted}
-              setCallAccepted={setCallAccepted}
-              callerSignal={callerSignal}
-            />
-            <BsFillCameraVideoFill className="icon" />
-          </div>
           <div className="current-messages">
             {messages.map((val, index) => (
               <div ref={messagesEndRef} key={index}>

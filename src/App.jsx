@@ -29,7 +29,7 @@ const App = () => {
   const [user, _] = useLocalStorage("user");
   const [currentChat, setCurrentChat] = useState(null);
   const [newMessage, setNewMessage] = useState("");
-  const [receivingCall, setReceivingCall] = useState(true);
+  const [receivingCall, setReceivingCall] = useState(false);
   const [callAccepted, setCallAccepted] = useState(false);
   const [callData, setCallData] = useState({
     caller: "",
@@ -100,22 +100,27 @@ const App = () => {
           <Route
             index
             path="/"
-            element={user?.email ? <Navigate to="/profile" /> : <Login />}
-          />
-          <Route path="/signup" element={<Signup />} />
-          <Route path="ui" element={<Card />} />
-          <Route path="profile" element={<Profile />}>
-            <Route
-              path=""
-              element={
-                <CurrentChatPage
+            element={
+              user?.email ? (
+                <Navigate
+                  to="/profile"
                   socket={socket}
-                  newMessage={newMessage}
                   receivingCall={receivingCall}
                   callAccepted={callAccepted}
                   setCallAccepted={setCallAccepted}
                   callerSignal={callData.callerSignal}
                 />
+              ) : (
+                <Login />
+              )
+            }
+          />
+          <Route path="/signup" element={<Signup />} />
+          <Route path="profile" element={<Profile />}>
+            <Route
+              path=""
+              element={
+                <CurrentChatPage socket={socket} newMessage={newMessage} />
               }
             />
             <Route path="notes" element={<NotesPage />} />

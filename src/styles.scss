@@ -92,6 +92,7 @@ body {
 
   .user-current-chat {
     flex: 6;
+    overflow-x: hidden;
   }
 }
 
@@ -198,6 +199,10 @@ body {
   color: white;
 }
 
+.primary-bg {
+  background-color: v.$primary;
+}
+
 .primary-text {
   color: v.$primary;
 }
@@ -207,6 +212,14 @@ a:-webkit-any-link {
 }
 
 input {
+  margin: 10px 0px;
+  width: 100%;
+  padding: 15px;
+  background-color: v.$lightGray;
+  border: none;
+  border-radius: 5px;
+}
+textarea {
   margin: 10px 0px;
   width: 100%;
   padding: 15px;
@@ -239,4 +252,29 @@ input {
   color: v.$darkGray;
   height: 100%;
   font-size: 1.5rem;
+}
+
+.content {
+  height: calc(100vh - 85px - 20px - 71px);
+  background-color: v.$lightPurple;
+}
+
+.scroll-container {
+  margin-top: 5%;
+  display: flex;
+  background-color: v.$lightPurple;
+  height: 100%;
+
+  overflow-x: scroll;
+  padding: 20px;
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+  gap: 10px;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+.parent-scroll {
+  overflow: hidden;
 }

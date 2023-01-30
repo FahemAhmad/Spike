@@ -2,6 +2,7 @@ import httpService from "./httpService";
 const auth = "/auth";
 const user = "/user";
 const oneToOne = "/one-to-one-chat";
+const notes = "/notes";
 
 // Auth services
 const signInEndpoint = (body) => httpService.post(`${auth}/signup`, body);
@@ -18,6 +19,12 @@ const getCompleteChatEndpoint = (id) => httpService.get(`${oneToOne}/${id}`);
 const sendOneToOneMessageEndpoint = (id, body) =>
   httpService.post(`${oneToOne}/${id}/message`, body);
 
+// Notes
+const getMyNotesEndpoint = () => httpService.get(`${notes}/mytasks`);
+const addNoteEndpoint = (body) => httpService.post(`${notes}`, body);
+const deleteNoteEndpoint = (id) => httpService.delete(`${notes}/${id}`);
+const getSharedNotesEndpoint = () => httpService.get(`${notes}/ shared`);
+
 export {
   signInEndpoint,
   loginInEndpoint,
@@ -26,4 +33,8 @@ export {
   addFriendsEndpoint,
   getCompleteChatEndpoint,
   sendOneToOneMessageEndpoint,
+  getMyNotesEndpoint,
+  addNoteEndpoint,
+  deleteNoteEndpoint,
+  getSharedNotesEndpoint,
 };

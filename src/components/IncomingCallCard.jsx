@@ -7,8 +7,8 @@ const IncomingCallCardWrapper = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  width: 300px;
-  height: 250px;
+  width: 250px;
+  height: 220px;
   background-color: #dedef1;
   padding: 20px;
   position: absolute;
@@ -21,8 +21,8 @@ const IncomingCallCardWrapper = styled.div`
 `;
 
 const Avatar = styled.img`
-  width: 100px;
-  height: 100px;
+  width: 80px;
+  height: 80px;
   border-radius: 50%;
   margin-bottom: 20px;
 `;
@@ -35,7 +35,7 @@ const CallerName = styled.h3`
 
 const CallButton = styled.button`
   width: 100px;
-  height: 50px;
+  height: 40px;
   background-color: green;
   border: none;
   color: white;

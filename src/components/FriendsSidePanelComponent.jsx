@@ -99,7 +99,7 @@ function FriendsSidePanelComponent() {
                       key={value._id}
                       img={value.profilePicture}
                       name={value.name}
-                      messageCount="2"
+                      messageCount="0"
                     />
                   ))
                 )}
