@@ -3,6 +3,8 @@ const auth = "/auth";
 const user = "/user";
 const oneToOne = "/one-to-one-chat";
 const notes = "/notes";
+const tasks = "/tasks";
+const events = "/events";
 
 // Auth services
 const signInEndpoint = (body) => httpService.post(`${auth}/signup`, body);
@@ -28,6 +30,24 @@ const updateNoteEndpoint = (id, body) =>
 const getSharedNotesEndpoint = (email) =>
   httpService.get(`${notes}/shared/${email}`);
 
+//Tasks
+const getMyTasksEndpoint = () => httpService.get(`${tasks}/mytasks`);
+const addTaskEndpoint = (body) => httpService.post(`${tasks}`, body);
+const deleteTaskEndpoint = (id) => httpService.delete(`${tasks}/${id}`);
+const updateTaskEndpoint = (id, body) =>
+  httpService.patch(`${tasks}/${id}`, body);
+const getSharedTasksEndpoint = (email) =>
+  httpService.get(`${tasks}/shared/${email}`);
+
+//Events
+const getMyEventsEndpoint = () => httpService.get(`${events}/myevents`);
+const addEventEndpoint = (body) => httpService.post(`${events}`, body);
+const deleteEventEndpoint = (id) => httpService.delete(`${events}/${id}`);
+const updateEventEndpoint = (id, body) =>
+  httpService.patch(`${events}/${id}`, body);
+const getSharedEventsEndpoint = (email) =>
+  httpService.get(`${events}/shared/${email}`);
+
 export {
   signInEndpoint,
   loginInEndpoint,
@@ -41,4 +61,14 @@ export {
   deleteNoteEndpoint,
   updateNoteEndpoint,
   getSharedNotesEndpoint,
+  getMyTasksEndpoint,
+  addTaskEndpoint,
+  deleteTaskEndpoint,
+  updateTaskEndpoint,
+  getSharedTasksEndpoint,
+  getMyEventsEndpoint,
+  addEventEndpoint,
+  deleteEventEndpoint,
+  updateEventEndpoint,
+  getSharedEventsEndpoint,
 };

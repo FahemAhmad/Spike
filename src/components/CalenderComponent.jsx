@@ -7,9 +7,13 @@ import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
 import Stack from "@mui/material/Stack";
 import { BsFillCalendarWeekFill } from "react-icons/bs";
 
-export default function CustomDateTimePicker() {
+export default function CalenderComponent({
+  eventTime,
+  setEventTime,
+  readOnly,
+}) {
   const [dateWithInitialValue, setDateWithInitialValue] = React.useState(
-    dayjs("2019-01-01T18:54")
+    dayjs(eventTime)
   );
 
   return (
@@ -24,8 +28,12 @@ export default function CustomDateTimePicker() {
           <BsFillCalendarWeekFill style={{ color: "#7d80ff" }} />
           <DateTimePicker
             className="date-time-picker"
+            disabled={readOnly}
             value={dateWithInitialValue}
-            onChange={(newValue) => setDateWithInitialValue(newValue)}
+            onChange={(newValue) => {
+              setDateWithInitialValue(newValue);
+              setEventTime(dayjs(newValue));
+            }}
             mask="__-__-____ __:__ _M"
             inputFormat="DD-MM-YYYY  hh:mm a"
             renderInput={(params) => (

@@ -10,15 +10,14 @@ function Card({
   sharedWith,
   edit,
   isPersonal,
-  calender,
   setActionNumber,
   containerClick,
+  eventTime,
   index,
 }) {
   let newData = sharedWith?.map(JSON.stringify);
   newData = new Set(newData);
   newData = Array.from(newData)?.map(JSON.parse);
-  console.log("newDaa", newData);
 
   return (
     // eslint-disable-next-line jsx-a11y/no-static-element-interactions
@@ -42,7 +41,7 @@ function Card({
         </h4>
       )}
 
-      {calender && <CalenderComponent />}
+      {eventTime && <CalenderComponent eventTime={eventTime} />}
       {isPersonal ? (
         <span className="badge">
           <span className="badge-letter">P</span>
