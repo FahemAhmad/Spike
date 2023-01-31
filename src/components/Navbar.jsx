@@ -45,7 +45,7 @@ function Navbar({ logged }) {
             </ul>
           </div>
           <div className="profile">
-            <IoMdNotifications size={"2em"} />
+            {/* <IoMdNotifications size={"2em"} /> */}
             <div>
               <Button
                 id="basic-button"

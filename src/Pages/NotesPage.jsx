@@ -1,5 +1,8 @@
 import React, { useContext, useEffect, useState } from "react";
-import { getMyNotesEndpoint } from "../backend/apiCalls";
+import {
+  getMyNotesEndpoint,
+  getSharedNotesEndpoint,
+} from "../backend/apiCalls";
 import Card from "../components/Card";
 import NotesModal from "../components/NotesModal";
 import ButtonPair from "../components/ButtonPair";
@@ -10,16 +13,41 @@ function NotesPage() {
   const [isPersonal, setIsPersonal] = useState(true);
   const [notesOpen, setNotesOpen] = useState(false);
   const [notes, setNotes] = useState([]);
-  const [isDelete, setIsDelete] = useState(false);
+  const [actionType, setActionType] = useState("Add Notes");
+  const [actionNumber, setActionNumber] = useState(undefined);
+  const [selected, setSelected] = useState(undefined);
+
+  //1 for add
+  //2 for view
+  //3 for edit
+  //4 for delete
 
   async function getPersonalNotes() {
+    setNotes([]);
     await getMyNotesEndpoint().then((res) => {
       setNotes(res.data);
     });
   }
 
+  async function getSharedNotes() {
+    setNotes([]);
+    await getSharedNotesEndpoint(currentChat.email).then((res) => {
+      setNotes(res.data);
+    });
+  }
+
+  useEffect(() => {
+    if (actionNumber === 1) setActionType("Add Notes");
+    else if (actionNumber === 2) setActionType("View Notes");
+    else if (actionNumber === 3) setActionType("Edit Notes");
+    else if (actionNumber === 4) setActionType("Delete Notes");
+
+    if (actionNumber) setNotesOpen(true);
+  }, [actionNumber]);
+
   useEffect(() => {
     if (isPersonal) getPersonalNotes();
+    else getSharedNotes();
   }, [isPersonal]);
 
   return (
@@ -47,11 +75,16 @@ function NotesPage() {
                     flex: "1 0 50%",
                   }}
                 >
+
                   <Card
+                    containerClick={setSelected}
+                    index={index}
                     title={val.title}
                     description={val.description}
                     sharedWith={val.sharedWith}
+                    isPersonal={val.noteType === "personal"}
                     edit={true}
+                    setActionNumber={setActionNumber}
                   />
                 </div>
               ))}
@@ -69,16 +102,28 @@ function NotesPage() {
             <button
               className="primary-btn primary-bg"
               style={{ color: "white" }}
-              onClick={() => setNotesOpen(true)}
+              onClick={() => {
+                setNotesOpen(true);
+                setActionNumber(1);
+              }}
             >
               Add Note
             </button>
           </div>
           <NotesModal
             open={notesOpen}
-            toggleOpen={() => setNotesOpen(false)}
+            toggleOpen={() => {
+              setActionNumber(undefined);
+              setSelected(undefined);
+              setNotesOpen(false);
+            }}
             callback={() => void 0}
-            isDelete={isDelete}
+            type={actionType}
+            gotData={selected !== undefined ? notes[selected] : null}
+            readOnly={actionType === "View Notes"}
+            setNotes={setNotes}
+            notes={notes}
+            isPersonal={isPersonal}
           />
         </div>
       )}

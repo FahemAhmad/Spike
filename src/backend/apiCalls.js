@@ -23,7 +23,10 @@ const sendOneToOneMessageEndpoint = (id, body) =>
 const getMyNotesEndpoint = () => httpService.get(`${notes}/mytasks`);
 const addNoteEndpoint = (body) => httpService.post(`${notes}`, body);
 const deleteNoteEndpoint = (id) => httpService.delete(`${notes}/${id}`);
-const getSharedNotesEndpoint = () => httpService.get(`${notes}/ shared`);
+const updateNoteEndpoint = (id, body) =>
+  httpService.patch(`${notes}/${id}`, body);
+const getSharedNotesEndpoint = (email) =>
+  httpService.get(`${notes}/shared/${email}`);
 
 export {
   signInEndpoint,
@@ -36,5 +39,6 @@ export {
   getMyNotesEndpoint,
   addNoteEndpoint,
   deleteNoteEndpoint,
+  updateNoteEndpoint,
   getSharedNotesEndpoint,
 };
