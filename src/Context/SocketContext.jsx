@@ -7,7 +7,7 @@ const SocketContextProvider = (props) => {
   const [socket, setSocket] = useState(null);
 
   useEffect(() => {
-    const socket = io("ws://localhost:8900");
+    const socket = io("ws://192.168.100.10:8900");
     setSocket(socket);
 
     return () => {

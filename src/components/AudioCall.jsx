@@ -1,109 +1,224 @@
-import React, { useState } from "react";
+/* eslint-disable jsx-a11y/media-has-caption */
+import React, { useEffect, useState } from "react";
 import Peer from "simple-peer";
-import styled from "styled-components";
-import { IoMdCall } from "react-icons/io";
 import { useRef } from "react";
+import { IoMdCall } from "react-icons/io";
+import { useContext } from "react";
+import { SocketContext } from "../Context/SocketContext";
+import IncomingCallCard from "./IncomingCallCard";
+import "./Call.scss";
+import Draggable from "react-draggable";
+const AudioCall = ({ recieverId, userName, userId, reciverName }) => {
+  const { socket } = useContext(SocketContext);
 
-const Video = styled.video`
-  border: 1px solid blue;
-  width: 50%;
-  height: 50%;
-`;
+  const [localStream, setStream] = useState(null);
+  const [remoteStream, setRemoteStream] = useState(null);
+  const [showCall, setShowCall] = useState(false);
+  const [receivingCall, setReceivingCall] = useState(false);
+  const [caller, setCaller] = useState("");
+  const [callerSignal, setCallerSignal] = useState();
+  const [callAccepted, setCallAccepted] = useState(false);
+  const [callEnded, setCallEnded] = useState(false);
+  const [name, setName] = useState("");
+  const myaudio = useRef();
+  const useraudio = useRef();
+  const connectionRef = useRef();
 
-const AudioCall = ({
-  socket,
-  id,
-  userId,
-  receivingCall,
-  callAccepted,
-  setCallAccepted,
-  callerSignal,
-}) => {
-  const [stream, setStream] = useState();
-  const userVideo = useRef();
-  const partnerVideo = useRef();
-
-  const StartCall = () => {
-    navigator.mediaDevices
-      .getUserMedia({ video: true, audio: true })
+  const callUser = async () => {
+    // console.log("stream 1", stream);
+    await navigator.mediaDevices
+      .getUserMedia({ audio: true, video: false })
       .then((stream) => {
         setStream(stream);
-        if (userVideo.current) {
-          userVideo.current.srcObject = stream;
-        }
-      });
+
+        const peer = new Peer({
+          initiator: true,
+          trickle: false,
+          stream: stream,
+        });
+        // console.log("stream", stream);
+
+        peer.on("signal", (data) => {
+          socket.emit("callUser", {
+            usersToCall: [recieverId],
+            signalData: data,
+            from: userId,
+            name: userName,
+          });
+        });
+        peer.on("stream", (stream) => {
+          console.log("useraudio", useraudio);
+          if (useraudio.current) {
+            useraudio.current.srcObject = stream;
+          }
+        });
+        socket.on("callAccepted", (signal) => {
+          setCallAccepted(true);
+          peer.signal(signal);
+        });
+
+        // console.log("peer", peer);
+        if (connectionRef.current) connectionRef.current = peer;
+
+        peer.on("close", () => {
+          console.log("connection closed");
+        });
+      })
+      .catch((err) => console.log("err", err));
+    setShowCall(true);
+    // console.log("stream 3", stream);
   };
 
-  function callPeer() {
-    StartCall();
-    const peer = new Peer({
-      initiator: true,
-      trickle: false,
-      stream: stream,
-    });
-
-    peer.on("signal", (data) => {
-      socket.current.emit("callUser", {
-        userToCall: id,
-        signalData: data,
-        from: userId,
-      });
-    });
-
-    peer.on("stream", (stream) => {
-      if (partnerVideo.current) {
-        partnerVideo.current.srcObject = stream;
-      }
-    });
-
-    if (callAccepted) peer.signal(callerSignal);
-  }
-
-  function acceptCall() {
+  const answerCall = () => {
     setCallAccepted(true);
     const peer = new Peer({
       initiator: false,
       trickle: false,
-      stream: stream,
+      stream: localStream,
     });
+
     peer.on("signal", (data) => {
-      socket.current.emit("acceptCall", { signal: data, to: id });
+      socket.emit("answerCall", { signal: data, to: caller });
     });
-
     peer.on("stream", (stream) => {
-      partnerVideo.current.srcObject = stream;
+      console.group("stream in answer", stream);
+      setRemoteStream(stream);
     });
 
-    peer.signal(callerSignal);
-  }
+    if (peer) {
+      peer.signal(callerSignal);
+      if (connectionRef.current) connectionRef.current = peer;
+    }
+  };
 
-  let UserVideo;
-  if (stream) {
-    // eslint-disable-next-line no-unused-vars
-    UserVideo = <Video playsInline muted ref={userVideo} autoPlay />;
-  }
+  const leaveCall = () => {
+    setCallEnded(true);
+    console.log("loalStream", localStream);
+    socket.emit("endCall", { to: recieverId });
+    if (localStream) {
+      localStream.getTracks().forEach((track) => {
+        track.stop();
+      });
+    }
 
-  let PartnerVideo;
-  if (callAccepted) {
-    // eslint-disable-next-line no-unused-vars
-    PartnerVideo = <Video playsInline ref={partnerVideo} autoPlay />;
-  }
+    if (remoteStream) {
+      remoteStream.getTracks().forEach((track) => {
+        track.stop();
+      });
+    }
+    setShowCall(false);
+    setReceivingCall(false);
+    setCaller("");
+    setName("");
+    setCallerSignal();
+    setStream("");
+    setRemoteStream("");
+    setCallerSignal("");
+    setCallAccepted(false);
+    setCallEnded(false);
+    if (connectionRef.current) {
+      connectionRef.current.destroy();
+      connectionRef.current = null;
+    }
+  };
 
-  let incomingCall;
-  if (receivingCall) {
-    // eslint-disable-next-line no-unused-vars
-    incomingCall = (
-      <div>
-        <h1> is calling you</h1>
-        <button onClick={acceptCall}>Accept</button>
-      </div>
-    );
-  }
+  useEffect(() => {
+    socket.on("callUser", (data) => {
+      setShowCall(true);
+      setReceivingCall(true);
+      setCaller(data.from);
+      setName(data.name);
+      setCallerSignal(data.signal);
+
+      const getLocalStream = async () => {
+        if (!localStream) {
+          try {
+            const stream = await navigator.mediaDevices.getUserMedia({
+              audio: true,
+              video: false,
+            });
+
+            setStream(stream);
+          } catch (error) {
+            console.error(error);
+          }
+        }
+      };
+
+      getLocalStream();
+    });
+
+    socket.on("endCall", () => {
+      leaveCall();
+    });
+  }, []);
+
+  useEffect(() => {
+    if (myaudio.current && localStream) {
+      myaudio.current.srcObject = localStream;
+    }
+  }, [myaudio.current, localStream]);
+
+  useEffect(() => {
+    if (useraudio.current && remoteStream) {
+      useraudio.current.srcObject = remoteStream;
+    }
+  }, [useraudio.current, remoteStream]);
+
+  // useEffect(() => {
+  //   console.log("stream", stream);
+  // }, [stream]);
 
   return (
-    <div>
-      <IoMdCall className="icon" onClick={() => callPeer()} />
-    </div>
+    <>
+      <IoMdCall className="icon" onClick={() => callUser()} />
+      {receivingCall && !callAccepted ? (
+        <IncomingCallCard name={userName} onAccept={answerCall} />
+      ) : null}
+
+      <Draggable handle=".audio-start">
+        <div className="audio-start">
+          {showCall && (
+            <div className="audio-container">
+              <div className="audio-wrapper">
+                <div className="audio">
+                  <>
+                    <div>You</div>
+
+                    <audio ref={myaudio} muted autoPlay />
+                    {!callAccepted && (
+                      <div
+                        className="decline-button-container"
+                        style={{ backgroundColor: "none" }}
+                      >
+                        <button className="decline-button" onClick={leaveCall}>
+                          Cancel Call
+                        </button>
+                      </div>
+                    )}
+                  </>
+                </div>
+                <div className="audio">
+                  {callAccepted && !callEnded ? (
+                    <>
+                      <div>{reciverName.toUpperCase()}</div>
+                      <audio ref={useraudio} autoPlay />
+                    </>
+                  ) : null}
+                </div>
+              </div>
+              {callAccepted && !callEnded && (
+                <div className="decline-button-container">
+                  <button className="decline-button" onClick={leaveCall}>
+                    Decline Call
+                  </button>
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+      </Draggable>
+    </>
   );
 };
 

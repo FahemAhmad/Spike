@@ -111,6 +111,11 @@ const VideoCall = ({ recieverId, userName, userId, reciverName }) => {
     setCaller("");
     setName("");
     setCallerSignal();
+    setStream("");
+    setRemoteStream("");
+    setCallerSignal("");
+    setCallAccepted(false);
+    setCallEnded(false);
     if (connectionRef.current) {
       connectionRef.current.destroy();
       connectionRef.current = null;
