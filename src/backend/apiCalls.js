@@ -2,6 +2,7 @@ import httpService from "./httpService";
 const auth = "/auth";
 const user = "/user";
 const oneToOne = "/one-to-one-chat";
+const groupChat = "/group-chat";
 const notes = "/notes";
 const tasks = "/tasks";
 const events = "/events";
@@ -12,12 +13,14 @@ const loginInEndpoint = (body) => httpService.post(`${auth}/login`, body);
 
 // User
 const getUserFriendsEndpoint = () => httpService.get(`${user}/friends`);
+const getUserChatGroupsEndpoint = () => httpService.get(`${user}/chatGroups`);
 const searchFriendsEndpoint = (input) =>
   httpService.get(`${user}/search?input=${input}`);
 const addFriendsEndpoint = (body) => httpService.put(`${user}/addfriend`, body);
 
 //get one to one chats of the user
 const getCompleteChatEndpoint = (id) => httpService.get(`${oneToOne}/${id}`);
+
 const sendOneToOneMessageEndpoint = (id, body) =>
   httpService.post(`${oneToOne}/${id}/message`, body);
 
@@ -48,6 +51,16 @@ const updateEventEndpoint = (id, body) =>
 const getSharedEventsEndpoint = (email) =>
   httpService.get(`${events}/shared/${email}`);
 
+//Group Chat
+const getCompleteGroupChatEndpoint = (id) =>
+  httpService.get(`${groupChat}/${id}`);
+const sendGroupMessageEndpoint = (id, body) =>
+  httpService.post(`${groupChat}/${id}/message`, body);
+const createGroupChatEndpoint = (body) =>
+  httpService.post(`${groupChat}/create`, body);
+const getCompleteGroupChatMessageEndpoint = (id) =>
+  httpService.get(`${groupChat}/${id}/messages`);
+
 export {
   signInEndpoint,
   loginInEndpoint,
@@ -71,4 +84,9 @@ export {
   deleteEventEndpoint,
   updateEventEndpoint,
   getSharedEventsEndpoint,
+  getCompleteGroupChatEndpoint,
+  sendGroupMessageEndpoint,
+  createGroupChatEndpoint,
+  getUserChatGroupsEndpoint,
+  getCompleteGroupChatMessageEndpoint,
 };

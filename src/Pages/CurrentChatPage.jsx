@@ -7,13 +7,21 @@ import { useContext, useEffect, useRef, useState } from "react";
 import { ChatContext } from "../Context/ChatContext";
 import {
   getCompleteChatEndpoint,
+  getCompleteGroupChatMessageEndpoint,
+  sendGroupMessageEndpoint,
   sendOneToOneMessageEndpoint,
 } from "../backend/apiCalls";
 import * as Toastify from "../components/Toastify";
+import useLocalStorage from "../Hooks/useLocalStorage";
+import { SocketContext } from "../Context/SocketContext";
 
-function CurrentChatPage({ socket, newMessage }) {
+function CurrentChatPage() {
+  const { socket } = useContext(SocketContext);
+  const [user, _] = useLocalStorage("user");
+
   const messagesEndRef = useRef(null);
   const [newMessageText, setNewMessageText] = useState("");
+  const [newMessage, setNewMessage] = useState("");
   const { currentChat } = useContext(ChatContext);
   const [file, setFile] = useState();
   const [messages, setMessages] = useState([]);
@@ -25,21 +33,31 @@ function CurrentChatPage({ socket, newMessage }) {
   };
 
   function handleFileSelect(e) {
-    console.log("e", e);
     setFile(e.target.files[0]);
   }
 
   async function GetCompleteChat() {
-    await getCompleteChatEndpoint(currentChat._id)
-      .then((res) => {
-        setMessages(res.data);
-      })
-      .catch(() => {
-        setMessages([]);
-      });
+    if (currentChat.name) {
+      await getCompleteChatEndpoint(currentChat._id)
+        .then((res) => {
+          setMessages(res.data);
+        })
+        .catch(() => {
+          setMessages([]);
+        });
+    } else {
+      await getCompleteGroupChatMessageEndpoint(currentChat._id)
+        .then((res) => {
+          console.log("res", res);
+          setMessages(res.data.messages);
+        })
+        .catch(() => {
+          setMessages([]);
+        });
+    }
   }
 
-  async function handleSubmitMessage() {
+  async function sendGroupMessage() {
     let content;
     if (file) content = file;
     else content = newMessageText;
@@ -49,20 +67,50 @@ function CurrentChatPage({ socket, newMessage }) {
     formData.append("content", content);
     formData.append("type", file ? "file" : "text");
 
-    await sendOneToOneMessageEndpoint(currentChat?._id, formData)
+    await sendGroupMessageEndpoint(currentChat?._id, formData)
       .then((res) => {
         setNewMessageText("");
         setFile();
         setMessages([...messages, res.data]);
-        socket?.current.emit("sendMessage", {
+        socket?.emit("sendMessage", {
           ...res.data,
-          recieverId: currentChat?._id,
+          recieverId: [currentChat?.members],
         });
       })
       .catch((err) => {
         setNewMessageText("");
         Toastify.showFailure(err.response?.data?.message);
       });
+  }
+
+  async function handleSubmitMessage() {
+    if (currentChat.title) {
+      sendGroupMessage();
+    } else {
+      let content;
+      if (file) content = file;
+      else content = newMessageText;
+
+      const formData = new FormData();
+      formData.append("id", currentChat?._id);
+      formData.append("content", content);
+      formData.append("type", file ? "file" : "text");
+
+      await sendOneToOneMessageEndpoint(currentChat?._id, formData)
+        .then((res) => {
+          setNewMessageText("");
+          setFile();
+          setMessages([...messages, res.data]);
+          socket?.emit("sendMessage", {
+            ...res.data,
+            recieverId: [currentChat?._id],
+          });
+        })
+        .catch((err) => {
+          setNewMessageText("");
+          Toastify.showFailure(err.response?.data?.message);
+        });
+    }
   }
 
   useEffect(() => {
@@ -72,6 +120,7 @@ function CurrentChatPage({ socket, newMessage }) {
   }, [currentChat]);
 
   useEffect(() => {
+    console.log("Updated complete message", newMessage);
     setMessages([...messages, newMessage]);
   }, [newMessage]);
 
@@ -82,15 +131,30 @@ function CurrentChatPage({ socket, newMessage }) {
     }
   }, [messages]);
 
+  useEffect(() => {
+    if (user && user?.id) {
+      socket?.emit("addUser", user.id);
+
+      socket?.on("getMessage", (data) => {
+        console.log("new Message recieved", data);
+        setNewMessage(data);
+      });
+    }
+  }, [user]);
+
   return (
     <>
       {currentChat ? (
         <>
           <div className="current-messages">
-            {messages.map((val, index) => (
+            {messages?.map((val, index) => (
               <div ref={messagesEndRef} key={index}>
                 <MessageComponent
-                  own={val.sender !== currentChat._id}
+                  own={
+                    currentChat.title
+                      ? val.sender === user.id
+                      : val.sender !== currentChat._id
+                  }
                   message={val?.text}
                   sendDate={val.date}
                   messageType={val.messageType}

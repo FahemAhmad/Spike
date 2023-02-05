@@ -49,7 +49,7 @@ function MultiSelectSearchbar({
       />
       <div style={{ padding: 3 }}>
         <ul className="search-results" style={{ listStyleType: "none" }}>
-          {searchQuery.length >= 3 &&
+          {searchQuery?.length >= 3 &&
             data.map(
               (d) =>
                 d[name] !== searchQuery && (
@@ -76,7 +76,7 @@ function MultiSelectSearchbar({
                 )
             )}
         </ul>
-        {selectedValues.length > 0 && (
+        {selectedValues?.length > 0 && (
           <>
             <p style={{ color: "darkgray" }}>Friends List :</p>
             <ul className="selected-values">

@@ -8,10 +8,15 @@ import TabList from "@mui/lab/TabList";
 import TabPanel from "@mui/lab/TabPanel";
 import ChatComponent from "../components/ChatComponent";
 import * as Toastify from "../components/Toastify.jsx";
-import { getUserFriendsEndpoint } from "../backend/apiCalls";
+import ProfilePicture from "../assets/profile.png";
+import {
+  getUserChatGroupsEndpoint,
+  getUserFriendsEndpoint,
+} from "../backend/apiCalls";
 
 function FriendsSidePanelComponent() {
   const [userFriends, setUserFriends] = useState([]);
+  const [userGroups, setUserGroups] = useState([]);
   const [value, setValue] = React.useState("1");
 
   const handleChange = (event, newValue) => {
@@ -27,8 +32,20 @@ function FriendsSidePanelComponent() {
     );
   };
 
+  const getUserGroups = async () => {
+    await getUserChatGroupsEndpoint().then(
+      (res) => {
+        setUserGroups(res.data.chatGroups);
+      },
+      (err) => {
+        Toastify.showFailure(err.response.data.message);
+      }
+    );
+  };
+
   useEffect(() => {
     getUserFriends();
+    getUserGroups();
   }, []);
 
   return (
@@ -36,7 +53,7 @@ function FriendsSidePanelComponent() {
       <div className="chat-inbox">
         <div className="header">
           <div className="options">
-            <AddOptions callback={getUserFriends} />
+            <AddOptions callback={getUserFriends} callback2={getUserGroups} />
           </div>
           <div className="search">
             <i className="search-icon">
@@ -90,7 +107,7 @@ function FriendsSidePanelComponent() {
             </Box>
             <TabPanel value="1">
               <div className="list-of-chats">
-                {userFriends.length === 0 ? (
+                {userFriends?.length === 0 ? (
                   <div className="not-found"> No Friend Found</div>
                 ) : (
                   userFriends.map((value) => (
@@ -106,7 +123,21 @@ function FriendsSidePanelComponent() {
               </div>
             </TabPanel>
             <TabPanel value="2">
-              <div className="list-of-chats"></div>
+              <div className="list-of-chats">
+                {userGroups?.length === 0 ? (
+                  <div className="not-found"> No Group Added</div>
+                ) : (
+                  userGroups?.map((value) => (
+                    <ChatComponent
+                      value={value}
+                      key={value._id}
+                      img={ProfilePicture}
+                      name={value.title}
+                      messageCount="0"
+                    />
+                  ))
+                )}
+              </div>
             </TabPanel>
           </TabContext>
         </div>

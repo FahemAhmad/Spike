@@ -65,7 +65,7 @@ const IncomingCallCard = ({ name = "Unknown User", onAccept, onDecline }) => (
         gap: 20,
       }}
     >
-      <CallButton onClick={onAccept}>Accept</CallButton>
+      <CallButton onClick={() => onAccept()}>Accept</CallButton>
       <DeclineButton onClick={onDecline}>Decline</DeclineButton>
     </div>
   </IncomingCallCardWrapper>

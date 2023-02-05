@@ -9,9 +9,11 @@ import MenuList from "@mui/material/MenuList";
 import Stack from "@mui/material/Stack";
 import { SlOptionsVertical } from "react-icons/sl";
 import AddFriends from "./AddFriends";
+import AddGroup from "./AddGroup";
 
-export default function AddOptions({ callback }) {
+export default function AddOptions({ callback, callback2 }) {
   const [addFriendOpen, setAddFriendOpen] = useState(false);
+  const [addGroupOpen, setAddGroupOpen] = useState(false);
   const [open, setOpen] = React.useState(false);
 
   const anchorRef = React.useRef(null);
@@ -25,6 +27,14 @@ export default function AddOptions({ callback }) {
       return;
     }
     setAddFriendOpen(true);
+    setOpen(false);
+  };
+
+  const handleAddGroup = (event) => {
+    if (anchorRef.current && anchorRef.current.contains(event.target)) {
+      return;
+    }
+    setAddGroupOpen(true);
     setOpen(false);
   };
 
@@ -95,7 +105,9 @@ export default function AddOptions({ callback }) {
                       <MenuItem onClick={handleAddFriend}>
                         Add a friend
                       </MenuItem>
-                      <MenuItem onClick={handleClose}>Create a Group</MenuItem>
+                      <MenuItem onClick={handleAddGroup}>
+                        Create a Group
+                      </MenuItem>
                     </MenuList>
                   </ClickAwayListener>
                 </Paper>
@@ -108,6 +120,11 @@ export default function AddOptions({ callback }) {
         open={addFriendOpen}
         toggleOpen={() => setAddFriendOpen(false)}
         callback={callback}
+      />
+      <AddGroup
+        open={addGroupOpen}
+        toggleOpen={() => setAddGroupOpen(false)}
+        callback={callback2}
       />
     </>
   );
