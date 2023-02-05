@@ -36,13 +36,10 @@ function Profile({
               <h3>{currentChat.name ? currentChat.name : currentChat.title}</h3>
               <div style={{ flex: 1 }} />
               <AudioCall
-                id={currentChat._id}
-                socket={socket}
+                recieverId={currentChat._id}
                 userId={user?.id}
-                receivingCall={receivingCall}
-                callAccepted={callAccepted}
-                setCallAccepted={setCallAccepted}
-                callerSignal={callerSignal}
+                userName={user?.name}
+                reciverName={currentChat.name}
               />
               <VideoCall
                 recieverId={currentChat._id}
