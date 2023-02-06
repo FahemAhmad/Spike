@@ -81,7 +81,6 @@ const AudioCall = ({ recieverId, userName, userId, reciverName }) => {
       socket.emit("answerCall", { signal: data, to: caller });
     });
     peer.on("stream", (stream) => {
-      console.group("stream in answer", stream);
       setRemoteStream(stream);
     });
 
@@ -192,7 +191,7 @@ const AudioCall = ({ recieverId, userName, userId, reciverName }) => {
                         style={{ backgroundColor: "none" }}
                       >
                         <button className="decline-button" onClick={leaveCall}>
-                          Cancel Call
+                          Cancel Cal
                         </button>
                       </div>
                     )}
