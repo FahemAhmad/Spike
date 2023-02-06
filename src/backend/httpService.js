@@ -3,7 +3,7 @@ import * as Toastify from "../components/Toastify.jsx";
 
 const authToken = JSON.parse(localStorage.getItem("token"));
 
-axios.defaults.baseURL = "http://192.168.100.10:3000/api/v1";
+axios.defaults.baseURL = "http://localhost:3000/api/v1";
 axios.defaults.headers.common["Authorization"] = `Bearer ${authToken}`;
 
 axios.interceptors.response.use(null, (error) => {
