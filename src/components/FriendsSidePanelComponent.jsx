@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import AddOptions from "../components/AddOptions";
 import { BiSearchAlt2 } from "react-icons/bi";
 import Box from "@mui/material/Box";
@@ -12,9 +12,14 @@ import ProfilePicture from "../assets/profile.png";
 import {
   getUserChatGroupsEndpoint,
   getUserFriendsEndpoint,
+  readAllMessagesEndpoint,
 } from "../backend/apiCalls";
+import { ChatContext } from "../Context/ChatContext";
+import { SocketContext } from "../Context/SocketContext";
 
 function FriendsSidePanelComponent() {
+  const { currentChat } = useContext(ChatContext);
+  const { newMessageRecieved } = useContext(SocketContext);
   const [userFriends, setUserFriends] = useState([]);
   const [userGroups, setUserGroups] = useState([]);
   const [value, setValue] = React.useState("1");
@@ -42,6 +47,37 @@ function FriendsSidePanelComponent() {
       }
     );
   };
+  async function readAllMessages() {
+    await readAllMessagesEndpoint({ friendId: currentChat._id }).then((res) =>
+      console.log("All messages has been read", res)
+    );
+  }
+  useEffect(() => {
+    if (currentChat) {
+      let newfrinds = userFriends.map((uf) => {
+        if (uf._id === currentChat._id) {
+          uf.unreadMessages = 0;
+        }
+        return uf;
+      });
+
+      setUserFriends(newfrinds);
+      readAllMessages();
+    }
+  }, [currentChat]);
+
+  useEffect(() => {
+    if (newMessageRecieved) {
+      setUserFriends(() =>
+        userFriends.map((uf) => {
+          if (uf._id === newMessageRecieved.sender) {
+            if (uf._id !== currentChat?._id) uf.unreadMessages++;
+          }
+          return uf;
+        })
+      );
+    }
+  }, [newMessageRecieved]);
 
   useEffect(() => {
     getUserFriends();
@@ -116,7 +152,9 @@ function FriendsSidePanelComponent() {
                       key={value._id}
                       img={value.profilePicture}
                       name={value.name}
-                      messageCount="0"
+                      messageCount={
+                        value.unreadMessages ? value.unreadMessages : 0
+                      }
                     />
                   ))
                 )}

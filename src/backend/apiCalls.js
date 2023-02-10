@@ -21,9 +21,10 @@ const addFriendsEndpoint = (body) => httpService.put(`${user}/addfriend`, body);
 
 //get one to one chats of the user
 const getCompleteChatEndpoint = (id) => httpService.get(`${oneToOne}/${id}`);
-
 const sendOneToOneMessageEndpoint = (id, body) =>
   httpService.post(`${oneToOne}/${id}/message`, body);
+const readAllMessagesEndpoint = (body) =>
+  httpService.put(`${oneToOne}/mark-as-read`, body);
 
 // Notes
 const getMyNotesEndpoint = () => httpService.get(`${notes}/mytasks`);
@@ -91,4 +92,5 @@ export {
   createGroupChatEndpoint,
   getUserChatGroupsEndpoint,
   getCompleteGroupChatMessageEndpoint,
+  readAllMessagesEndpoint,
 };

@@ -7,13 +7,7 @@ import useLocalStorage from "../Hooks/useLocalStorage";
 import ProfilePicture from "../assets/profile.png";
 import VideoCall from "../components/VideoCall";
 
-function Profile({
-  socket,
-  receivingCall,
-  callAccepted,
-  setCallAccepted,
-  callerSignal,
-}) {
+function Profile() {
   const [user, _] = useLocalStorage("user");
   const { currentChat } = useContext(ChatContext);
 

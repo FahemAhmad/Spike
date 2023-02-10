@@ -36,7 +36,12 @@ const App = () => {
 
   return (
     <SocketContextProvider>
-      <ChatContext.Provider value={{ currentChat, setCurrentChat }}>
+      <ChatContext.Provider
+        value={{
+          currentChat,
+          setCurrentChat,
+        }}
+      >
         <ToastContainer
           position="top-right"
           autoClose={5000}

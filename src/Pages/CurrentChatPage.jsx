@@ -16,13 +16,13 @@ import useLocalStorage from "../Hooks/useLocalStorage";
 import { SocketContext } from "../Context/SocketContext";
 
 function CurrentChatPage() {
-  const { socket } = useContext(SocketContext);
+  const { socket, newMessageRecieved } = useContext(SocketContext);
   const [user, _] = useLocalStorage("user");
 
   const messagesEndRef = useRef(null);
   const [newMessageText, setNewMessageText] = useState("");
-  const [newMessage, setNewMessage] = useState("");
-  const { currentChat } = useContext(ChatContext);
+
+  const { currentChat, setCurrentChat } = useContext(ChatContext);
   const [file, setFile] = useState();
   const [messages, setMessages] = useState([]);
 
@@ -48,8 +48,9 @@ function CurrentChatPage() {
     } else {
       await getCompleteGroupChatMessageEndpoint(currentChat._id)
         .then((res) => {
-          console.log("res", res);
           setMessages(res.data.messages);
+
+          setCurrentChat({ ...currentChat, unreadMessages: 0 });
         })
         .catch(() => {
           setMessages([]);
@@ -101,6 +102,7 @@ function CurrentChatPage() {
           setNewMessageText("");
           setFile();
           setMessages([...messages, res.data]);
+
           socket?.emit("sendMessage", {
             ...res.data,
             recieverId: [currentChat?._id],
@@ -120,9 +122,10 @@ function CurrentChatPage() {
   }, [currentChat]);
 
   useEffect(() => {
-    console.log("Updated complete message", newMessage);
-    setMessages([...messages, newMessage]);
-  }, [newMessage]);
+    if (newMessageRecieved)
+      if (newMessageRecieved?.sender === currentChat?._id)
+        setMessages([...messages, newMessageRecieved]);
+  }, [newMessageRecieved]);
 
   useEffect(() => {
     if (messages.length > 0) {
@@ -130,17 +133,6 @@ function CurrentChatPage() {
         messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
     }
   }, [messages]);
-
-  useEffect(() => {
-    if (user && user?.id) {
-      socket?.emit("addUser", user.id);
-
-      socket?.on("getMessage", (data) => {
-        console.log("new Message recieved", data);
-        setNewMessage(data);
-      });
-    }
-  }, [user]);
 
   return (
     <>

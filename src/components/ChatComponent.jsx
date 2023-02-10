@@ -3,7 +3,7 @@ import { ChatContext } from "../Context/ChatContext";
 import ProfilePicture from "../assets/profile.png";
 
 function ChatComponent({ value, messageCount }) {
-  const { currentChat, setCurrentChat } = useContext(ChatContext);
+  const {  setCurrentChat } = useContext(ChatContext);
 
   function handleChatComponent() {
     setCurrentChat(value);
