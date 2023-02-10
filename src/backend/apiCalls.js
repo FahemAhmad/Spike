@@ -10,6 +10,7 @@ const events = "/events";
 // Auth services
 const signInEndpoint = (body) => httpService.post(`${auth}/signup`, body);
 const loginInEndpoint = (body) => httpService.post(`${auth}/login`, body);
+const registerUser = (body) => httpService.post(`${auth}/signup`, body);
 
 // User
 const getUserFriendsEndpoint = () => httpService.get(`${user}/friends`);
@@ -64,6 +65,7 @@ const getCompleteGroupChatMessageEndpoint = (id) =>
 export {
   signInEndpoint,
   loginInEndpoint,
+  registerUser,
   getUserFriendsEndpoint,
   searchFriendsEndpoint,
   addFriendsEndpoint,

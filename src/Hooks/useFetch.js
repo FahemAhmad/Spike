@@ -4,6 +4,7 @@ import useLocalStorage from "./useLocalStorage";
 const useFetch = (apiCall) => {
   const [loading, setLoading] = useState(false);
   const [_, setUserData] = useLocalStorage("user");
+  const [token, setToken] = useLocalStorage("token");
   const [error, setError] = useState("");
 
   const handleGoogle = async (response) => {
@@ -20,6 +21,7 @@ const useFetch = (apiCall) => {
         if (data?.user) {
           // eslint-disable-next-line no-unused-vars
           setUserData(data?.user);
+          setToken(data.user?.token);
           window.location.reload();
         }
 
