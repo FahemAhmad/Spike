@@ -1,0 +1,23 @@
+@use "../Utilis/variables.scss" as v;
+
+.navbar-container {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  height: 75px;
+  border-bottom: 1px solid v.$black-200;
+}
+
+.middle-section {
+  ul {
+    display: flex;
+    list-style-type: none;
+    gap: 30px;
+
+    li {
+      font-size: 1.2rem;
+      font-weight: 300;
+      color: v.$black-500;
+    }
+  }
+}
