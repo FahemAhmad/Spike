@@ -1,0 +1,82 @@
+@use "../Utilis/variables.scss" as v;
+@import url("https://fonts.googleapis.com/css?family=Bangers|Cinzel:400,700,900|Lato:100,300,400,700,900|Lobster|Lora:400,700|Mansalva|Muli:200,300,400,600,700,800,900|Open+Sans:300,400,600,700,800|Oswald:200,300,400,500,600,700|Roboto:100,300,400,500,700,900&display=swap");
+
+.login-container {
+  height: 100vh;
+  display: flex;
+  flex-wrap: wrap;
+
+  .container-section {
+    padding: 5%;
+    height: 100vh;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+  }
+
+  .section2 {
+    background-color: v.$black-100;
+    text-align: center;
+    img {
+      width: 700px;
+    }
+    h3 {
+      color: v.$black-700;
+      font-weight: 300;
+      text-align: center;
+      width: 80%;
+      margin: auto;
+    }
+  }
+
+  .midfield-container {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+
+    h3 {
+      color: v.$black-700;
+      font-weight: 300;
+    }
+
+    button {
+      height: 50px;
+    }
+    img {
+      height: 35px;
+      margin-right: 20px;
+      width: 35px;
+    }
+  }
+}
+
+.profile-container {
+  height: calc(100vh - 76px);
+  display: flex;
+
+  .left-container {
+    flex: 3;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    border-right: 1px solid v.$black-400;
+  }
+  .right-container {
+    flex: 7;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 20px 30px 5px 30px;
+
+    .email-view {
+      overflow-y: scroll;
+      overflow-x: hidden;
+      height: calc(100vh - 76px - 80px);
+    }
+
+    .email-reply {
+      height: 50px;
+    }
+  }
+}

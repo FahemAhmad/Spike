@@ -1,83 +1,65 @@
+/* eslint-disable no-undef */
+/* eslint-disable jsx-a11y/anchor-is-valid */
+/* eslint-disable jsx-a11y/no-static-element-interactions */
+/* eslint-disable jsx-a11y/click-events-have-key-events */
+
 import { createRoot } from "react-dom/client";
-import "./styles.scss";
-// eslint-disable-next-line import/namespace
+import React from "react";
+import Login from "./Pages/Login";
 import {
   BrowserRouter as Router,
-  Routes,
-  Route,
   Navigate,
+  Route,
+  Routes,
 } from "react-router-dom";
-import Login from "./Pages/Login";
-import Profile from "./Pages/Profile";
-import Navbar from "./components/Navbar";
-import CurrentChatPage from "./Pages/CurrentChatPage";
-import EventsPage from "./Pages/EventsPage";
-import TasksPage from "./Pages/TasksPage";
+import Callback from "./Pages/Callback";
+import HomePage from "./Pages/HomePage";
+import ProfilePage from "./Pages/ProfilePage";
 import NotesPage from "./Pages/NotesPage";
-import useLocalStorage from "./Hooks/useLocalStorage";
-import Signup from "./Pages/Signup";
-import "react-toastify/dist/ReactToastify.css";
+import TasksPage from "./Pages/TasksPage";
+import EventPage from "./Pages/EventPage";
+import MeetPage from "./Pages/MeetPage";
+import "./styles.scss";
 import { ToastContainer } from "react-toastify";
-import { ChatContext } from "./Context/ChatContext";
-import { useState } from "react";
-import SocketContextProvider from "./Context/SocketContext";
+import "react-toastify/dist/ReactToastify.css";
 
-const App = () => {
-  // eslint-disable-next-line no-unused-vars
-  const [user, _] = useLocalStorage("user");
-  const [currentChat, setCurrentChat] = useState(null);
+function App() {
+  // Define a function that checks if the user is authenticated (has an access token)
+  function isAuthenticated() {
+    const accessToken = localStorage.getItem("access_token");
+    let response = accessToken !== null;
 
-  const isLoggedIn = () => {
-    if (user) {
-      return user;
-    }
-    return false;
-  };
+    return response;
+  }
+
+  // Create a Higher-Order Component (HOC) that protects a route
 
   return (
-    <SocketContextProvider>
-      <ChatContext.Provider
-        value={{
-          currentChat,
-          setCurrentChat,
-        }}
-      >
-        <ToastContainer
-          position="top-right"
-          autoClose={5000}
-          hideProgressBar={false}
-          newestOnTop={false}
-          closeOnClick
-          rtl={false}
-          pauseOnFocusLoss
-          draggable
-          pauseOnHover
-          theme="light"
-        />
-        {/* Same as */}
-
-        <Router>
-          <Navbar logged={isLoggedIn()} />
-          <Routes>
-            <Route
-              index
-              path="/"
-              element={user?.email ? <Navigate to="/profile" /> : <Login />}
-            />
-            <Route path="/signup" element={<Signup />} />
-            <Route path="profile" element={<Profile />}>
-              <Route path="" element={<CurrentChatPage />} />
-              <Route path="notes" element={<NotesPage />} />
-              <Route path="events" element={<EventsPage />} />
-              <Route path="tasks" element={<TasksPage />} />
-            </Route>
-          </Routes>
-        </Router>
-        <ToastContainer />
-      </ChatContext.Provider>
-    </SocketContextProvider>
+    <>
+      <ToastContainer />
+      <Router>
+        <Routes>
+          <Route path="/" element={<Login />} />
+          <Route path="/auth/google/callback" element={<Callback />} />
+          <Route
+            index
+            path="/"
+            element={isAuthenticated() ? <Navigate to="/profile" /> : <Login />}
+          />
+          <Route path="/profile" element={<ProfilePage />}>
+            <Route path="" element={<HomePage />} />
+            <Route path="notes" element={<NotesPage />} />
+            <Route path="events" element={<EventPage />} />
+            <Route path="tasks" element={<TasksPage />} />
+            <Route path="meet" element={<MeetPage />} />
+            <Route path="*" element={<Navigate to="" />} />
+          </Route>
+          <Route path="*" element={<Navigate to="/" />} />
+        </Routes>
+      </Router>
+    </>
   );
-};
+}
 
 const container = document.getElementById("root");
 const root = createRoot(container);
