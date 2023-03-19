@@ -16,7 +16,7 @@ const Login = () => {
         redirect_uri: "http://localhost:5173/auth/google/callback",
       }).toString();
 
-      window.location.href = `https://spike-messenger-backend.onrender.com/google-auth?${params}`;
+      window.location.href = `http://localhost:4000/google-auth?${params}`;
     } catch (error) {
       console.error(error);
       setLoading(false);

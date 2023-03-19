@@ -10,7 +10,7 @@ const Callback = () => {
 
       try {
         const response = await axios.post(
-          "https://spike-messenger-backend.onrender.com/google-auth/callback",
+          "http://localhost:4000/google-auth/callback",
           {
             code: code,
             client_id:
