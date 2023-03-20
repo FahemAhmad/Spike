@@ -33,6 +33,9 @@ function Navbar() {
           <Link to="/profile/events">
             <li>Events</li>
           </Link>
+          <Link to="/profile/meet">
+            <li>Meet</li>
+          </Link>
         </ul>
       </div>
       <div className="right-section">
