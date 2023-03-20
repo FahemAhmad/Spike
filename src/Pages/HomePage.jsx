@@ -6,6 +6,7 @@ import apiCalls from "../backend/apiCalls";
 import { TabContext, TabList, TabPanel } from "@mui/lab";
 import { Box, Tab } from "@mui/material";
 import { GrAttachment } from "react-icons/gr";
+import axios from "axios";
 
 function HomePage() {
   const [value, setValue] = React.useState("1");
@@ -60,6 +61,39 @@ function HomePage() {
 
   function handleFileSelect(e) {
     setFile(e.target.files[0]);
+  }
+
+  async function sendEmail(event) {
+    event.preventDefault();
+
+    try {
+      const formData = new FormData();
+      formData.append("to", currentEmail);
+      formData.append("body", newMessageText);
+
+      formData.append("subject", "Mail through spike");
+
+      const access_token = localStorage.getItem("access_token");
+      if (!access_token) {
+        // Handle error - access token not found in localStorage
+        return;
+      }
+
+      // Set the Authorization header with the existing access token
+      axios.defaults.headers.common["Authorization"] = `Bearer ${access_token}`;
+      axios.defaults.headers.post["Content-Type"] = "multipart/form-data";
+
+      const res = await axios.post(
+        "http://localhost:4000/emails/send",
+        formData
+      );
+      if (res.status === 200) {
+        window.location.reload();
+      }
+      setNewMessageText("");
+    } catch (err) {
+      console.log("err", err);
+    }
   }
 
   useEffect(() => {
@@ -147,7 +181,7 @@ function HomePage() {
               onChange={(e) => setNewMessageText(e.target.value)}
               onKeyDown={handleKeyDown}
             />
-            <button onClick={() => console.log("submit button")}>Send</button>
+            <button onClick={(e) => sendEmail(e)}>Send</button>
           </div>
         </div>
       </div>
