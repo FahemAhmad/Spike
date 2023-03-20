@@ -3,7 +3,7 @@ import ToastMessageService from "../Components/ToastMessageService";
 
 const authToken = localStorage.getItem("access_token");
 
-axios.defaults.baseURL = "https://localhost:4000";
+axios.defaults.baseURL = "http://localhost:4000";
 axios.defaults.headers.common["Authorization"] = `Bearer ${authToken}`;
 
 axios.interceptors.response.use(null, (error) => {

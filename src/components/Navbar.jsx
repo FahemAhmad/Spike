@@ -1,10 +1,10 @@
 import { Logout } from "@mui/icons-material";
 import { Button, CircularProgress } from "@mui/material";
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 import "./componentStyles.scss";
 
 function Navbar() {
-  
   const [loading, setLoading] = useState();
 
   const handleLogout = () => {
@@ -26,9 +26,13 @@ function Navbar() {
       </div>
       <div className="middle-section">
         <ul>
-          <li to="/">Emails</li>
-          <li to="/tasks">Tasks</li>
-          <li to="/events">Events</li>
+          <Link to="/profile/">Emails</Link>
+          <Link to="/profile/tasks">
+            <li>Tasks</li>
+          </Link>
+          <Link to="/profile/events">
+            <li>Events</li>
+          </Link>
         </ul>
       </div>
       <div className="right-section">
